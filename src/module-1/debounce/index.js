@@ -3,7 +3,7 @@ export const debounce = (fn, delay = 0) => {
 
     return function() {
         const functionCall = () => {
-            fn.apply(this, arguments);
+            console.log(fn.apply(this, arguments));
         }
 
         clearTimeout(timeout);
