@@ -18,12 +18,10 @@
   <script type="module">
     import Card from './index.js';
     import { products } from '/products.js'
-    
-    products.forEach(product => {
-      const card = new Card(product);
-      root.append(card.element);   
-    });
 
+    
+    const card = new Card(products[0]);
+    root.append(card.element);
   </script>
 </body>
 
