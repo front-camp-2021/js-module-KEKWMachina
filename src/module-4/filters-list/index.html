@@ -5,15 +5,56 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div id="root">
-    <button id="reset">Reset checkboxes</button>
+  <header class="header">
+    <div class="header__logo"></div>
+    <div class="header__text">Online Store</div>
+  </header>
+
+  <div class="breadcrumbs">
+    <div class="breadcrumbs__home-button"></div>
+    <div class="breadcrumbs__arrows"></div>
+    <div class="breadcrumbs__active-page">eCommerce</div>
+    <div class="breadcrumbs__arrows"></div>
+    <div class="breadcrumbs__page">Electronics</div>
+  </div>
+
+  <div class="main-content-nav">
+    <div class="filters-header">
+      <div class="filters-header__nav">
+        <div class="filters-header__marker">Filters</div>
+        <button class="filters-header__filters-hide-button"></button>
+      </div>
+    </div>
+    <div class="search-resluts">
+      <div class="search-resluts__number">7588 Results Found</div>
+        <button class="search-resluts__wishlist-button"></button>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <div class="filters">
+      <div class="filters__main">
+        <div class="slider__main">
+        </div>
+      </div>
+      <button class="filters__filters-reset-button">Reset Filters</button>
+    </div>
+    <div class="cards">
+      <div class="searchfield">
+        <input class="searchfield__input" placeholder="Search">
+      </div>
+    </div>
   </div>
 
   <script type="module">
     import FiltersList from './index.js';
+    import Card from './card.js';
+    import { products } from './products.js';
+    import CardsList from './cardList.js';
 
     const list = [
       {
@@ -21,9 +62,13 @@
         title: 'Cell phones',
       },
       {
-        value: 'computers',
-        checked: true,
+        value: 'laptops',
+      
         title: 'Computers & Tables',
+      },
+      {
+        value: 'PCs',
+        title: 'Personal Computers',
       }
     ];
 
@@ -32,15 +77,50 @@
       list
     });
 
-    root.append(filtersList.element);
+    const filtersContainer = document.querySelector('.filters__main');
+    const resetButton = document.querySelector('.filters__filters-reset-button');
+    filtersContainer.append(filtersList.element);
 
-    reset.addEventListener('pointerdown', () => {
-      filtersList.reset();
+    const cardListContainer = document.querySelector('.cards');
+    const cardsList = new CardsList({
+      data: products,
+      Component: Card
     });
+
+    cardListContainer.append(cardsList.element);
+
+    resetButton.addEventListener('pointerdown', () => {
+      filtersList.reset();
+      cardsList.update([]);
+    });
+
+    const CardFilters = new Set();
 
     filtersList.element.addEventListener('change', event => {
-      console.error('event', event.target.value);
+      if (event.target.checked) {
+        CardFilters.add(event.target.id);
+      } else {
+        CardFilters.delete(event.target.id);
+      }
+
+      function filterProducts(productsArr = [], CardFilters = []) {
+        const result = [];
+
+        for (const filter of CardFilters) {
+          for(const product of productsArr) {
+            if (Array.from(Object.values(product)).includes(filter)) {
+              result.push(product);
+            }
+          }
+        }
+
+        return result;
+      }
+
+      const filteredProducts = filterProducts(products, CardFilters);
+      cardsList.update(filteredProducts);
     });
+
   </script>
 </body>
 </html>

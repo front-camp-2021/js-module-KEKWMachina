@@ -34,7 +34,7 @@ describe('CardsList', () => {
     cardsList.update([secondProduct]);
 
     const body = cardsList.element.querySelector('[data-element="body"]');
-
+    console.log(body);
     expect(cardsList.data).toEqual([secondProduct]);
     expect(body).toHaveTextContent(secondProduct.title);
     expect(body).toHaveTextContent(secondProduct.rating);
