@@ -1,4 +1,4 @@
-import SideBar from './solution';
+import SideBar from './index';
 import { categoryFilterConfig, brandFilterConfig } from './config.js';
 
 describe('SideBar', () => {
@@ -26,4 +26,3 @@ describe('SideBar', () => {
     expect(sideBar.element).not.toBeInTheDocument();
   });
 });
-
