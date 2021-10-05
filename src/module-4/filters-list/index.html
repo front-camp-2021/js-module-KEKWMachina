@@ -38,6 +38,10 @@
   <div class="main-content">
     <div class="filters">
       <div class="filters__main">
+        <div class="filters__slider">
+
+
+        </div>
         <div class="slider__main">
         </div>
       </div>
@@ -51,10 +55,12 @@
   </div>
 
   <script type="module">
-    import FiltersList from './index.js';
+    import FiltersList from './filtersList.js';
     import Card from './card.js';
     import { products } from './products.js';
     import CardsList from './cardList.js';
+    import priceSliderElement from '/priceSlider.js';
+    import ratingSliderElement from '/ratingSlider.js';
 
     const list = [
       {
@@ -71,6 +77,16 @@
         title: 'Personal Computers',
       }
     ];
+
+    const sliderContainer = document.querySelector('.filters__slider');
+    const priceSlider = new priceSliderElement({ min: 23, max: 64, filterName: 'Price' });
+    const ratingSlider = new ratingSliderElement({ min: 0, max: 5, filterName: 'Rating' });
+
+    sliderContainer.append(priceSlider.element);
+    sliderContainer.append(ratingSlider.element);
+
+    priceSlider.rangeSelector();
+    ratingSlider.rangeSelector()
 
     const filtersList = new FiltersList({
       title: 'Category',
