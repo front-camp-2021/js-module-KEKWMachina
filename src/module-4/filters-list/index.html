@@ -39,10 +39,6 @@
     <div class="filters">
       <div class="filters__main">
         <div class="filters__slider">
-
-
-        </div>
-        <div class="slider__main">
         </div>
       </div>
       <button class="filters__filters-reset-button">Reset Filters</button>
@@ -59,8 +55,7 @@
     import Card from './card.js';
     import { products } from './products.js';
     import CardsList from './cardList.js';
-    import priceSliderElement from '/priceSlider.js';
-    import ratingSliderElement from '/ratingSlider.js';
+    import DuobleSlider from '/DoubleSlider.js';
 
     const list = [
       {
@@ -79,8 +74,8 @@
     ];
 
     const sliderContainer = document.querySelector('.filters__slider');
-    const priceSlider = new priceSliderElement({ min: 23, max: 64, filterName: 'Price' });
-    const ratingSlider = new ratingSliderElement({ min: 0, max: 5, filterName: 'Rating' });
+    const priceSlider = new DuobleSlider({ min: 23, max: 64, filterName: 'Price' });
+    const ratingSlider = new DuobleSlider({ min: 0, max: 5, filterName: 'Rating' });
 
     sliderContainer.append(priceSlider.element);
     sliderContainer.append(ratingSlider.element);
@@ -136,6 +131,8 @@
       const filteredProducts = filterProducts(products, CardFilters);
       cardsList.update(filteredProducts);
     });
+
+
 
   </script>
 </body>

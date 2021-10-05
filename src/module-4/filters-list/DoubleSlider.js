@@ -1,5 +1,5 @@
 /* eslint-disable radix */
-export default class ratingSlider {
+export default class priceSlider {
     element;
 
     constructor ({
@@ -17,18 +17,18 @@ export default class ratingSlider {
         return `<div class="wrapper">
         <div class="values">
             <span>${this.filterName}</span>
-            <span class="range-1">
+            <span class="range1">
             ${this.min}
             </span>
             <span> &dash; </span>
-            <span class="range-2">
+            <span class="range2">
             ${this.max}
             </span>
         </div>
         <div class="container">
-          <div class="slider--track"></div>
-          <input type="range" min="${this.min}" max="${this.max}" value="${this.min}" class="slider--1">
-          <input type="range" min="${this.min}" max="${this.max}" value="${this.max}" class="slider--2">
+          <div class="slider-track"></div>
+          <input type="range" min="${this.min}" max="${this.max}" value="${this.min}" class="slider-1">
+          <input type="range" min="${this.min}" max="${this.max}" value="${this.max}" class="slider-2">
         </div>
       </div>
 `
@@ -44,15 +44,16 @@ export default class ratingSlider {
     }
 
     rangeSelector() {
-        const sliderOne = document.querySelector(".slider--1");
-        const sliderTwo = document.querySelector(".slider--2");
-        const displayValOne = document.querySelector(".range-1");
-        const displayValTwo = document.querySelector(".range-2");
+        const sliderOne = this.element.querySelector(".slider-1");
+        const sliderTwo = this.element.querySelector(".slider-2");
+        const displayValOne = this.element.querySelector(".range1");
+        const displayValTwo = this.element.querySelector(".range2");
         const minGap = 0;
-        const sliderTrack = document.querySelector(".slider--track");
-        const sliderMaxValue = document.querySelector(".slider--1").max;
+        const sliderTrack = this.element.querySelector(".slider-track");
+        const sliderMaxValue = this.element.querySelector(".slider-1").max;
 
         function slideOne() {
+            
             if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
               sliderOne.value = parseInt(sliderTwo.value) - minGap;
             }
