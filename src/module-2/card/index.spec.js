@@ -4,9 +4,15 @@ import { products } from '../../fixtures/products.js';
 describe('Card', () => {
   let card;
 
+
   beforeEach(() => {
     card = new Card(products[0]);
-
+    card.destroy = function() {
+      if(this.element) {
+        this.element.remove();
+        this.element = null;
+      }
+    } 
     document.body.append(card.element);
   });
 
@@ -22,7 +28,6 @@ describe('Card', () => {
 
   it('should have ability to be destroyed', () => {
     card.destroy();
-
     expect(card.element).not.toBeInTheDocument();
   });
 });

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="header__logo"></div>
+    <div class="header__text">Online Store</div>
+  </header>
+
+  <div class="breadcrumbs">
+    <div class="breadcrumbs__home-button"></div>
+    <div class="breadcrumbs__arrows"></div>
+    <div class="breadcrumbs__active-page">eCommerce</div>
+    <div class="breadcrumbs__arrows"></div>
+    <div class="breadcrumbs__page">Electronics</div>
+  </div>
+
+  <div class="main-content-nav">
+    <div class="filters-header">
+      <div class="filters-header__nav">
+        <div class="filters-header__marker">Filters</div>
+        <button class="filters-header__filters-hide-button"></button>
+      </div>
+    </div>
+    <div class="search-resluts">
+      <div class="search-resluts__number">7588 Results Found</div>
+      <button class="search-resluts__wishlist-button"></button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="filters">
+
+
+    </div>
+    <div class="cards">
+      <div class="searchfield__wrapper">
+
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination__wrapper"></div>
+
+
+
+  <script type="module">
+    import { debounce } from '/debounce.js';
+    import Card from '/card.js';
+    import CardsList from '/cardList.js';
+    import Searchfield from '/search.js';
+    import SideBar from '/sideBar.js'
+    import FiltersList from '/filtersList.js';
+    import DoubleSlider from '/DoubleSlider.js';
+    import Pagination from '/pagination.js';
+    import { products } from '/products.js';
+    import { categoryFilterConfig, brandFilterConfig } from '/config.js';
+
+    const BACKEND_URL = 'http://localhost:3000';
+    const url = new URL('products', BACKEND_URL);
+    const categoriesURL = new URL('categories', BACKEND_URL);
+    const brandsURL = new URL('brands', BACKEND_URL);
+
+    let brandsResponse = await fetch(brandsURL);
+    let brandsData = await brandsResponse.json();
+
+    let categoriesResponse = await fetch(categoriesURL);
+    let categoriesData = await categoriesResponse.json();
+
+    let response = await fetch(url);
+    let data = await response.json();
+
+    const searchResults = document.querySelector('.search-resluts__number');
+
+    const searchFieldWrapper = document.querySelector('.searchfield__wrapper');
+    const searchfield = new Searchfield();
+
+    searchFieldWrapper.append(searchfield.element);
+
+    const cardListContainer = document.querySelector('.cards');
+    const cardsList = new CardsList({
+      data: data,
+      Component: Card
+    });
+
+    searchResults.textContent = `${data.length} results found`;
+    cardListContainer.append(cardsList.element);
+
+    searchfield.element.addEventListener('search-filter', async event => {
+      url.searchParams.set('q', event.detail);
+
+      response = await fetch(url);
+      data = await response.json();
+
+      console.log('data', data);
+      cardsList.update(data);
+      searchResults.textContent = `${data.length} results found`;
+    });
+
+    const paginationWrapper = document.querySelector('.pagination__wrapper');
+    const pagination = new Pagination({
+      totalPages: 7,
+      page: 2
+    })
+
+    paginationWrapper.append(pagination.element)
+    pagination.changePage();
+
+    let currentDataStart = 0;
+    let currentDataEnd = 9;
+    let pageIsOne = true;
+
+    pagination.element.addEventListener('change-page', event => {
+      if (event.target.className === 'pagination__button-page-back') {
+        if (pageIsOne) {
+          cardsList.update(data.slice(currentDataStart, currentDataEnd));
+        } else {
+          currentDataStart -= 9;
+          currentDataEnd -= 9;
+          cardsList.update(data.slice(currentDataStart, currentDataEnd));
+        }
+      } else if (event.target.className === 'pagination__button-page-forward') {
+        if (pageIsOne) {
+          cardsList.update(data.slice(9, 18));
+        } else {
+          currentDataStart += 9;
+          currentDataEnd += 9;
+          cardsList.update(data.slice(currentDataStart, currentDataEnd));
+        }
+      } else {
+        currentDataStart = 9 * (event.target.textContent - 1);
+        currentDataEnd = 9 * event.target.textContent;
+        console.log('Current', currentDataStart, currentDataEnd)
+        cardsList.update(data.slice(currentDataStart, currentDataEnd));
+      }
+
+      pageIsOne = false;
+    })
+
+    function initSliders(products = []) {
+      const startingData = {}
+      const copy = [...products];
+
+      const prices = copy.sort((a, b) => {
+        return a.price - b.price;
+      });
+
+      startingData.minPrice = prices[0].price;
+      startingData.maxPrice = prices[prices.length - 1].price;
+      return startingData;
+    }
+
+    const initSlidersData = initSliders(data);
+    const sideBarContainer = document.querySelector('.filters');
+
+    const sideBar = new SideBar({
+      categoriesFilter: categoriesData,
+      brandFilter: brandsData,
+      priceSliderData: { min: initSlidersData.minPrice, max: initSlidersData.maxPrice, filterName: 'Price' },
+    });
+
+    sideBarContainer.append(sideBar.element);
+    sideBar.dispatchResetFilters();
+
+    const priceSlider = document.querySelector('.wrapper');
+
+    let sliderOneValue;
+    let sliderTwoValue;
+
+    priceSlider.addEventListener('mouseup', debounce((event => {
+      if (event.target.className === 'slider-1' || event.target.className === 'slider-2') {
+ 
+        if (event.target.className === 'slider-1') {
+          sliderOneValue = +event.target.value;
+        } else {
+          sliderTwoValue = +event.target.value;
+        }
+
+        if(sliderOneValue === undefined) {
+          sliderOneValue = +document.querySelector('.slider-1').value;
+        } 
+        if(sliderTwoValue === undefined) {
+          sliderTwoValue = +document.querySelector('.slider-2').value;
+        }
+
+        const dataCopy = [...data];
+        const sorted = dataCopy.filter(element => {
+          return element.price >= +sliderOneValue && element.price <= +sliderTwoValue;
+        })
+
+        console.log(sorted);
+
+      cardsList.update(sorted);
+      }
+    }), 1000));
+
+    const resetButton = sideBar.element.querySelector('.filters__filters-reset-button');
+
+    resetButton.addEventListener('clear-filters', async () => {
+      sideBar.update(
+        categoriesData,
+        brandsData,
+        { min: initSlidersData.minPrice, max: initSlidersData.maxPrice, filterName: 'Price' },
+        { min: 0, max: 5, filterName: 'Rating' },
+      );
+
+      const updateUrl = new URL('products', BACKEND_URL);
+      const update = await fetch(updateUrl);
+      const updateResponse = await update.json();
+      cardsList.update(updateResponse);
+
+      searchfield.element.querySelector('.searchfield__input').value = '';
+      searchResults.textContent = `${updateResponse.length} results found`;
+    });
+
+    const filtersWrapper = sideBar.element.querySelectorAll('.checkbox__wrapper');
+
+    Array.from(filtersWrapper).map(element => {
+      element.addEventListener('change', async event => {
+        url.searchParams.set('q', event.target.id.split(' ')[0]);
+
+        response = await fetch(url);
+        data = await response.json();
+
+        console.log('data', data);
+        cardsList.update(data);
+
+      })
+    })
+
+
+
+  </script>
+</body>
+
+</html>

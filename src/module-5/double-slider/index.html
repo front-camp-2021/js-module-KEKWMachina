@@ -13,7 +13,11 @@
 <script type="module">
   import DoubleSlider from './index.js';
 
-  const slider = new DoubleSlider();
+  const slider = new DoubleSlider({
+    min: 50,
+    max: 100,
+    filterName: "Slider"
+  });
 
   root.append(slider.element);
 </script>

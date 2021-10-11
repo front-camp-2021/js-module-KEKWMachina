@@ -21,7 +21,46 @@ export default class Card {
     this.render();
   }
 
+  getTemplate () {
+    return `<section class="card">
+    <div class="card-img">
+        <img src="${this.images[0]}" alt="Merchendise image">
+    </div>
+    
+    <div class="rating-and-price">
+        <div class="rating">
+            <span>${this.rating}</span>
+            <div class="icon-rating"></div>
+        </div>
+        <span class="price">$${this.price}</span>
+    </div>
+    <ul class="card-ul">
+        <li class="item-name">${this.title}</li>
+        <li class="item-description">Redesigned from scratch and completely revised.</li>
+    </ul>
+    <div class="wishlist-cart-btn">
+        <button class="wishlist"> <div class="wishlist-img"></div> WISHLIST</button>
+        <button class="cart"> <div class="cart-img"></div> ADD TO CART</button>
+    </div>
+    </section>`
+  }
+
   render () {
-    // ... your logic
+    const wrapper = document.createElement('div');
+
+    wrapper.innerHTML = this.getTemplate();
+
+    this.element = wrapper.firstElementChild;
+  }
+
+  remove () {
+    if (this.element) {
+      this.element.remove();
+    }
+  }
+
+  destroy () {
+    this.remove();
+    this.element = null;
   }
 }

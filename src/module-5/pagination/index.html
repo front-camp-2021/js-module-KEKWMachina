@@ -8,18 +8,55 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
-
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <header class="header">
+    <div class="header__logo"></div>
+    <div class="header__text">Online Store</div>
+  </header>
+
+  <div class="breadcrumbs">
+    <div class="breadcrumbs__home-button"></div>
+    <div class="breadcrumbs__arrows"></div>
+    <div class="breadcrumbs__active-page">eCommerce</div>
+    <div class="breadcrumbs__arrows"></div>
+    <div class="breadcrumbs__page">Electronics</div>
+  </div>
+
+  <div class="main-content-nav">
+    <div class="filters-header">
+      <div class="filters-header__nav">
+        <div class="filters-header__marker">Filters</div>
+        <button class="filters-header__filters-hide-button"></button>
+      </div>
+    </div>
+    <div class="search-resluts">
+      <div class="search-resluts__number">7588 Results Found</div>
+      <button class="search-resluts__wishlist-button"></button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="filters">
+
+
+    </div>
+    <div class="cards">
+      <div class="searchfield">
+        <input class="searchfield__input" placeholder="Search">
+      </div>
+    </div>
+  </div>
 <div id="root"></div>
 
 <script type="module">
   import Pagination from './index.js';
 
   const pagination = new Pagination({
-    totalPages: 20,
-    currentPage: 2
+    totalPages: 10,
+    page: 6
   });
 
   root.append(pagination.element);

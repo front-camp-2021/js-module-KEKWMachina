@@ -1,23 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
-  <div id="root"></div>
+  <div class="main-content">
+    <div class="filters">
+      <div class="filters__main">
+      </div>
+      <button class="filters__filters-reset-button">Reset Filters</button>
+    </div>
+    <div class="cards">
+      <div class="searchfield">
+        <input class="searchfield__input" placeholder="Search">
+      </div>
+
+
+    </div>
+  </div>
 
   <script type="module">
-    import Card from '../../module-2/card/index.js';
+    import Card from './card.js';
     import CardsList from './index.js';
-    import { products } from '../../fixtures/products.js'
+    import { products } from './products.js'
 
-    const cardsList = new CardsList(products, Card);
+    const cardListContainer = document.querySelector('.cards');
+    const cardsList = new CardsList({
+      data: products,
+      Component: Card
+    });
 
-    root.append(cardsList.element);
+    cardListContainer.append(cardsList.element);
   </script>
 </body>
+
 </html>
